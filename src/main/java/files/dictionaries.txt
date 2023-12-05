@@ -1,0 +1,3 @@
+hello,xin chào
+mother,mẹ
+father,bố
