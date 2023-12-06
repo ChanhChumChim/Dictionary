@@ -19,7 +19,7 @@ public class DictionaryCommandline extends Dictionary {
     public static void dictionaryAdvanced() throws IOException {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Welcome to My Application!");
+        System.out.println("Welcome to My Dictionary!");
 
         while (true) {
             System.out.println("[0] Exit");
@@ -27,24 +27,25 @@ public class DictionaryCommandline extends Dictionary {
             System.out.println("[2] Remove");
             System.out.println("[3] Update");
             System.out.println("[4] Display");
+            System.out.println("[5] Lookup");
+            System.out.println("[6] Search");
             System.out.println("[8] Import from file");
             System.out.println("[9] Export to file");
 
-            System.out.print("Your action: ");
+            System.out.print("Please choose your action: ");
             int choice;
 
             try {
                 choice = scanner.nextInt();
             } catch (Exception e) {
-                // Xử lý ngoại lệ nếu người dùng nhập không phải là số
                 System.out.println("Action not supported");
-                scanner.nextLine(); // Đọc và loại bỏ ký tự không hợp lệ khỏi bộ đệm
+                scanner.nextLine();
                 continue;
             }
 
             switch (choice) {
                 case 0:
-                    System.out.println("Exiting the application. Goodbye!");
+                    System.out.println("Exiting the application.");
                     return;
                 case 1:
                     addWordFromUserInput();
@@ -53,10 +54,16 @@ public class DictionaryCommandline extends Dictionary {
                     removeWordFromUserInput();
                     break;
                 case 3:
-                    updateWordFromUserInput();
+                    modifyWordFromUserInput();
                     break;
                 case 4:
                     showAllWords();
+                    break;
+                case 5:
+                    dictionaryLookup();
+                    break;
+                case 6:
+                    dictionarySearcher();
                     break;
                 case 8:
                     insertFromFile();
@@ -68,6 +75,16 @@ public class DictionaryCommandline extends Dictionary {
                     System.out.println("Action not supported");
             }
         }
+    }
+
+
+    private static void modifyWordFromUserInput() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the English word to update: ");
+        String target = scanner.nextLine();
+        System.out.print("Enter the new Vietnamese meaning: ");
+        String explain = scanner.nextLine();
+        modifyWord(target, explain);
     }
 
     private static void addWordFromUserInput() {
@@ -84,15 +101,6 @@ public class DictionaryCommandline extends Dictionary {
         System.out.print("Enter the English word to remove: ");
         String target = scanner.nextLine();
         removeWord(target);
-    }
-
-    private static void updateWordFromUserInput() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter the English word to update: ");
-        String target = scanner.nextLine();
-        System.out.print("Enter the new Vietnamese meaning: ");
-        String explain = scanner.nextLine();
-        modifyWord(target, explain);
     }
     public static void main(String[] args) throws IOException {
         dictionaryAdvanced();

@@ -8,14 +8,14 @@ public class DictionaryManagement extends Dictionary {
     public static final String OUTPUT_PATH = "src/main/java/files/dictionaries_out.txt";
 
     public void insertFromCommandLine() {
-        Scanner getStringInput = new Scanner(System.in);
-        Scanner getIntegerInput = new Scanner(System.in);
-        int count = getIntegerInput.nextInt();
+        Scanner strInput = new Scanner(System.in);
+        Scanner intInput = new Scanner(System.in);
+        int count = intInput.nextInt();
         int i = 1;
         while (i <= count) {
-            String target = getStringInput.nextLine();
-            String meaning = getStringInput.nextLine();
-            Word temp = new Word(target, meaning);
+            String target = strInput.nextLine();
+            String explain = strInput.nextLine();
+            Word temp = new Word(target, explain);
             words.add(temp);
             i++;
         }
@@ -44,7 +44,7 @@ public class DictionaryManagement extends Dictionary {
             OutputStream outputStream = new FileOutputStream(file);
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
             BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
-            String format = "%-15s %-15s%n";
+            String format = "%-12s %-12s%n";
             for (Word word : words) {
                 bufferedWriter.write(String.format(format, word.getWord_target(), word.getWord_explain()));
             }
@@ -55,26 +55,26 @@ public class DictionaryManagement extends Dictionary {
         }
     }
 
-    public static void updateWordToFile() {
-        try {
-            FileWriter fileWriter = new FileWriter(INPUT_PATH);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            for (Word word : words) {
-                bufferedWriter.write(word.getWord_target() + "," + word.getWord_explain() + "\n");
-            }
-            bufferedWriter.flush();
-            bufferedWriter.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+    public static void modifyWord(String target, String explain) {
+        target = target.toLowerCase();
+        explain = explain.toLowerCase();
+        int pos = -1;
+        pos = Collections.binarySearch(words, new Word(target, null));
+        if (pos >= 0) {
+            words.get(pos).setWord_explain(explain);
+        } else {
+            System.out.println("Word not exist!");
         }
+        updateWordToFile();
     }
 
-    public static void addWord(String searching, String meaning) {
-        searching = searching.toLowerCase();
-        meaning = meaning.toLowerCase();
-        int posAddWord = binaryCheck(0, words.size(), searching);
+
+    public static void addWord(String target, String explain) {
+        target = target.toLowerCase();
+        explain = explain.toLowerCase();
+        int posAddWord = binaryCheck(0, words.size(), target);
         if (posAddWord == -1) {
-            System.out.println("Từ đã tồn tại!");
+            System.out.println("Word exist!");
             return;
         }
         words.add(new Word());
@@ -82,31 +82,18 @@ public class DictionaryManagement extends Dictionary {
             words.get(i + 1).setWord_target(words.get(i).getWord_target());
             words.get(i + 1).setWord_explain(words.get(i).getWord_explain());
         }
-        words.get(posAddWord).setWord_target(searching);
-        words.get(posAddWord).setWord_explain(meaning);
+        words.get(posAddWord).setWord_target(target);
+        words.get(posAddWord).setWord_explain(explain);
         updateWordToFile();
     }
 
-    public static void removeWord(String searching) {
-        searching = searching.toLowerCase();
-        int index = Collections.binarySearch(words, new Word(searching, null));
+    public static void removeWord(String target) {
+        target = target.toLowerCase();
+        int index = Collections.binarySearch(words, new Word(target, null));
         if (index >= 0) {
             words.remove(words.get(index));
         } else {
-            System.out.println("Từ không tồn tại!");
-        }
-        updateWordToFile();
-    }
-
-    public static void modifyWord(String searching, String meaning) {
-        searching = searching.toLowerCase();
-        meaning = meaning.toLowerCase();
-        int pos = -1;
-        pos = Collections.binarySearch(words, new Word(searching, null));
-        if (pos >= 0) {
-            words.get(pos).setWord_explain(meaning);
-        } else {
-            System.out.println("Từ không tồn tại!");
+            System.out.println("Word not exist!");
         }
         updateWordToFile();
     }
@@ -138,6 +125,57 @@ public class DictionaryManagement extends Dictionary {
                 return binaryCheck(mid + 1, end, word);
             } else {
                 return -1;
+            }
+        }
+    }
+
+    public static void updateWordToFile() {
+        try {
+            FileWriter fileWriter = new FileWriter(INPUT_PATH);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            for (Word word : words) {
+                bufferedWriter.write(word.getWord_target() + "," + word.getWord_explain() + "\n");
+            }
+            bufferedWriter.flush();
+            bufferedWriter.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void dictionaryLookup() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Type the word to lookup: ");
+        String wordToLookup = scanner.nextLine().toLowerCase();
+
+        int index = Collections.binarySearch(words, new Word(wordToLookup, null));
+        if (index >= 0) {
+            Word word = words.get(index);
+            System.out.printf("Found word: %s - %s%n", word.getWord_target(), word.getWord_explain());
+        } else {
+            System.out.println("Word can not be found in the dictionary.");
+        }
+    }
+
+    public static void dictionarySearcher() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter keyword: ");
+        String keyword = scanner.nextLine().toLowerCase();
+
+        ArrayList<String> matchingWords = new ArrayList<>();
+        for (Word word : words) {
+            String target = word.getWord_target().toLowerCase();
+            if (target.contains(keyword)) {
+                matchingWords.add(word.getWord_target());
+            }
+        }
+
+        if (matchingWords.isEmpty()) {
+            System.out.println("Couldn't find any related words.");
+        } else {
+            System.out.println("Related words:");
+            for (String matchingWord : matchingWords) {
+                System.out.println(matchingWord);
             }
         }
     }

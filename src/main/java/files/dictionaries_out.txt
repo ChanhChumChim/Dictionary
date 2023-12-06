@@ -1,0 +1,3 @@
+father       cha         
+hello        xin chào    
+mother       mẹ
