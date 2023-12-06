@@ -171,7 +171,7 @@ public class DictionaryManagement extends Dictionary {
         int index = Collections.binarySearch(words, new Word(wordToLookup, null));
         if (index >= 0) {
             Word word = words.get(index);
-            System.out.printf("Found word: %s - %s%n", word.getWord_target(), word.getWord_explain());
+            System.out.printf("Found word: English: %s - Vietnamese: %s%n", word.getWord_target(), word.getWord_explain());
         } else {
             System.out.println("Word can not be found in the dictionary.");
         }
