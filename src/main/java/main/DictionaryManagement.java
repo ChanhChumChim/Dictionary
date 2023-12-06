@@ -6,6 +6,7 @@ import java.util.*;
 public class DictionaryManagement extends Dictionary {
     public static final String INPUT_PATH = "src/main/java/files/dictionaries.txt";
     public static final String OUTPUT_PATH = "src/main/java/files/dictionaries_out.txt";
+    public static final String FILE_PATH = "src/main/java/files/resource.txt";
 
     public void insertFromCommandLine() {
         Scanner strInput = new Scanner(System.in);
@@ -24,6 +25,23 @@ public class DictionaryManagement extends Dictionary {
     public static void insertFromFile() {
         try {
             File input = new File(INPUT_PATH);
+            FileReader fileReader = new FileReader(input);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String line = null;
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] wordsInLine = line.split(",");
+                Word temp = new Word(wordsInLine[0], wordsInLine[1]);
+                words.add(temp);
+            }
+            Collections.sort(words);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void insertData() {
+        try {
+            File input = new File(FILE_PATH);
             FileReader fileReader = new FileReader(input);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line = null;
@@ -85,6 +103,8 @@ public class DictionaryManagement extends Dictionary {
         words.get(posAddWord).setWord_target(target);
         words.get(posAddWord).setWord_explain(explain);
         updateWordToFile();
+
+        System.out.println("New word added successfully!");
     }
 
     public static void removeWord(String target) {
@@ -131,7 +151,7 @@ public class DictionaryManagement extends Dictionary {
 
     public static void updateWordToFile() {
         try {
-            FileWriter fileWriter = new FileWriter(INPUT_PATH);
+            FileWriter fileWriter = new FileWriter(FILE_PATH);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             for (Word word : words) {
                 bufferedWriter.write(word.getWord_target() + "," + word.getWord_explain() + "\n");

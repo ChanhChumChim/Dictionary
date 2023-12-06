@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 
 import static main.DictionaryManagement.*;
+import static main.Game.playGame;
 
 public class DictionaryCommandline extends Dictionary {
     public static String showAllWords() {
@@ -29,6 +30,7 @@ public class DictionaryCommandline extends Dictionary {
             System.out.println("[4] Display");
             System.out.println("[5] Lookup");
             System.out.println("[6] Search");
+            System.out.println("[7] Game");
             System.out.println("[8] Import from file");
             System.out.println("[9] Export to file");
 
@@ -64,6 +66,9 @@ public class DictionaryCommandline extends Dictionary {
                     break;
                 case 6:
                     dictionarySearcher();
+                    break;
+                case 7:
+                    playGame();
                     break;
                 case 8:
                     insertFromFile();
@@ -103,6 +108,7 @@ public class DictionaryCommandline extends Dictionary {
         removeWord(target);
     }
     public static void main(String[] args) throws IOException {
+        insertData();
         dictionaryAdvanced();
     }
 }
